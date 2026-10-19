@@ -5,10 +5,20 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -23,16 +33,39 @@ public class MainActivity extends AppCompatActivity {
     private Button boton1, boton2, boton3;
     private  TextView miTexto;
 
+    private RadioGroup radioGroup;
+    private Button buttonCheck;
+    private TextView textViewResult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.linear);
 
         boton1 = findViewById(R.id.boton1);
         boton2 = findViewById(R.id.boton2);
         boton3 = findViewById(R.id.boton3);
         miTexto = findViewById(R.id.texto);
+
+        radioGroup = findViewById(R.id.radioGroup);
+        buttonCheck = findViewById(R.id.button_check);
+        textViewResult = findViewById(R.id.textViewResult);
+
+
+    //Estos son los elementos que se sugerirán
+        String[] opciones = {"opcion1", "opcion2", "opcion3", "opcion4", "opcion5"};
+
+    //Aqui se asigna el elemento AutoCompleteTextView creado en el XML al Java
+        AutoCompleteTextView textoLeido = findViewById(R.id.autoTexto);
+
+    //Creamos un ArrayAdapter al que le pasamos el array de strings
+    //La mision de este "ArrayAdapter" es adaptar los datos del array al AutoCompleteTextView
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this,
+        android.R.layout.simple_dropdown_item_1line, opciones);
+
+    //Por ultimo se le pasa al adaptador la instancia del texto definida en el XML
+        textoLeido.setAdapter(adaptador);
 
     }
 
@@ -91,10 +124,52 @@ public class MainActivity extends AppCompatActivity {
         miTexto.setTypeface(Typeface.SANS_SERIF);
 
 
+        Spinner miSpinner = (Spinner) findViewById(R.id.miSpinner);
+        String[] valores = {"Star Wars", "Reservoir Dogs", "El Club de la Lucha", "Snatch: Cerdos y Diamantes"};
+        miSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, valores));
+
+        miSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View View, int position, long l) {
+                System.out.println("Has seleccionado el valor: " + adapterView.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                System.out.println("No has seleccionado nada");
+            }
+        });
 
 
+        CheckBox checkbox1 = (CheckBox) findViewById(R.id.checkbox1);
+        // Listener para cambios en el CheckBox
+        checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    System.out.println("0");
+                } else {
+                    System.out.println("1");
+                }
+            }
+        });
 
+
+        buttonCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Obtener el ID del RadioButton seleccionado
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+
+                // Verificar si algun RadioButton está seleccionado
+                if (selectedId != -1) {
+                    RadioButton selectedRadioButton = findViewById(selectedId);
+                    String selectedOption = selectedRadioButton.getText().toString();
+                    textViewResult.setText("Seleccionado: " + selectedOption);
+                } else {
+                    //"No se ha seleccionado ninguna opcion"
+                }
+            }
+        });
     }
-
-
 }
