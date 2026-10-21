@@ -3,6 +3,8 @@ package com.example.tema4_interfazusuario;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Adapter;
@@ -12,9 +14,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
+import android.widget.RatingBar;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -36,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private Button buttonCheck;
     private TextView textViewResult;
+    private Switch switch1;
+    private TextView textViewStatus;
+
+    private SeekBar seekBar;
+    private TextView textViewProgress;
+
+    private RatingBar ratingBar;
+    private TextView textViewRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,5 +185,68 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        textViewStatus = findViewById(R.id.textViewStatus);
+        switch1 = findViewById(R.id.switch1);
+
+        // Listener para el cambio de estado del Switch
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    textViewStatus.setText("Estado: Encendido");
+                } else {
+                    textViewStatus.setText("Estado: Apagado");
+                }
+            }
+        });
+
+        seekBar = findViewById(R.id.seekBar);
+        textViewProgress = findViewById(R.id.textViewProgress);
+        // Listener para cambios en el SeekBar
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            // Metodo que se llama cuando cambia el progreso
+            @Override
+            public void onProgressChanged(@NonNull SeekBar seekBar, int progress, boolean fromUser) {
+                textViewProgress.setText("Valor: " + progress);
+            }
+            // Metodo que se Llama cuando el usuario empieza a tocar el SeekBar
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Aqui puedes anadir logica si necesitas hacer algo cuando el usuario empieza a mover el SeekBar
+            }
+            // Metodo que se llama
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Aqui puedes anadir lógica si necesitas hacer algo cuando el usuario termina de mover el SeekBar cuando elusuario deja de tocar el SeekBar
+            }
+        });
+
+        ratingBar = findViewById(R.id.ratingBar);
+        textViewRating = findViewById(R.id.textViewRating);
+        // Listener para cambios en la calificación del RatingBar
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                // Actualizar el TextView con la calificación seleccionada
+                textViewRating.setText("Calificación: " + rating);
+            }
+        });
+
+        ProgressBar pb = findViewById(R.id.pbDet);
+        ProgressBar pb1 = findViewById(R.id.progressBarIndeterminate);
+        ProgressBar pb2 = findViewById(R.id.progressBarIndeterminate1);
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            int v =0;
+            @Override public void run() {
+                if (v <= 100) {
+                    pb.setProgress(v += 5);
+                    new Handler(Looper.getMainLooper()).postDelayed(this, 200);
+                }
+            }
+        }, 200);
     }
 }

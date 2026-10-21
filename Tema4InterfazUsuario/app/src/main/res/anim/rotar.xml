@@ -8,6 +8,4 @@
     android:pivotY="50%"
     android:toDegrees="365"
     >
-
-
 </rotate>
